@@ -20,17 +20,3 @@ def get_model():
     model.eval()  
     return model
 
-def predict_mask(model, image_tensor, threshold=0.5):
-    """
-    image_tensor: torch.Tensor shape (1,12,H,W) or (12,H,W)
-    threshold: 0-1 to specify binary mask
-    """
-    model.eval()
-    if image_tensor.dim() == 3:
-        image_tensor = image_tensor.unsqueeze(0)  # (1,12,H,W)
-
-    image_tensor = image_tensor.to(DEVICE)
-    with torch.no_grad():
-        pred = torch.sigmoid(model(image_tensor))  # (1,1,H,W)
-        pred_mask = (pred > threshold).float()    # binary mask
-    return pred_mask.cpu() 
